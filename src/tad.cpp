@@ -1,14 +1,21 @@
 #include <iostream>
-
+#include "tavlporo.h"
 using namespace std;
 
-#include "tporo.h"
-#include "tvectorporo.h"
+
 
 int
 main(void)
 {
-  TPoro a(1, 2, 3, "rojo");
-  TVectorPoro v(5), w;
+  TPoro p5(5, 5, 5, "5");
+  TPoro p4(1, 2, 4, "4");
+  TPoro p3(1, 2, 3, "3");
+
+  cout << "---" << endl;
+
+  TAVLPoro avl;
+  avl.Insertar(p5);
+  avl.Insertar(p4);
+  avl.Insertar(p3);
 
 }

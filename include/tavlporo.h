@@ -2,6 +2,7 @@
 #define _TAVLPORO_
 
 #include <iostream>
+#include <cstdlib>
 #include "tporo.h"
 #include "tvectorporo.h"
 using namespace std;
@@ -10,6 +11,7 @@ class TNodoAVL;
 class TAVLPoro;
 
 class TAVLPoro{
+friend class TNodoAVL;
 //Sobrecarga del operador de salida
 friend ostream & operator <<(ostream &, const TAVLPoro &);
 
@@ -140,5 +142,4 @@ formato pedido en el CUARDENILLO 1 para la clase TVectorPoro.
 las posiciones están ocupadas por los elementos del árbol. No pueden quedar
 posiciones sin asignar. Si el árbol está vacío, se devuelve un vector vacío
 -vector dimension 0-
-
 */

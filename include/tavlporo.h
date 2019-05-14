@@ -17,11 +17,11 @@ private:
 	//Puntero al nodo raiz
 	TNodoAVL *raiz;
 	//AUXILIAR: Devuelve el recorrido en inorden 
-	void InordenAux(TVectorPoro &, int &);
+	void InordenAux(TVectorPoro &, int &)const;
 	//AUXILIAR: Devuelve el recorrido en preorden
-	void PreordenAux(TVectorPoro &, int &);
+	void PreordenAux(TVectorPoro &, int &)const;
 	//AUXILIAR: Devuelve el recorrido en postorden
-	void PostordenAux(TVectorPoro &, int &);
+	void PostordenAux(TVectorPoro &, int &)const;
 
 public:	
 	//Constructor por defecto
@@ -64,7 +64,7 @@ public:
 };
 
 class TNodoAVL{
-
+friend class TAVLPoro;
 private:
 	//El elemento del nodo
 	TPoro item;

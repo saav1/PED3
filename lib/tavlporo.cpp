@@ -127,44 +127,50 @@ bool TAVLPoro::Insertar(const TPoro &poro){
 		}
 
 	}
-
 	int iz = ((*this).raiz->iz.EsVacio()) ? 0 : (*this).raiz->iz.Altura();
 	int de = ((*this).raiz->de.EsVacio()) ? 0 : (*this).raiz->de.Altura();
 	unsigned int eq = abs( iz - de ); 
-
-	//Si se ha insertado el item. Vemos si se tiene que equilibrar.
-	if(insOk && (eq > 1) ){
-		cout << "Se tiene que equilibrar" << endl;
-	}else{
-		cout << "No se tiene que equilibrar" << endl;
-	}
-
+	if(insOk && (eq > 1) )equilibrarAux(); //Si la diff. es mayor que |1 ó -1| -> Equilibramos.
 
 
 	return insOk;
 }
-
-/*INSERTAR
-
-	if((*this).EsVacio()){
-	        TNodoABB *abbNodo = new TNodoABB();
-	        abbNodo->item = poro;
-	        this->nodo = abbNodo;
-	        return true;
+void TAVLPoro::equilibrarAux(){
+	//Puntero Auxiliar
+	TAVLPoro *auxAvl;
+	if( this->raiz->iz.Altura() > this->raiz->de.Altura()){
+		//La parte izquierda es más alta
+		auxAvl = new TAVLPoro(this->raiz->iz);
+		if(auxAvl->raiz->de.EsVacio()){
+			this->raiz->iz = TAVLPoro();
+			auxAvl->raiz->de = *this;
+			this->raiz = auxAvl->raiz;
+		}else{
+			 TAVLPoro *auxDe = new TAVLPoro(auxAvl->raiz->de);
+			 this->raiz->iz = TAVLPoro();
+			 auxAvl->raiz->de = TAVLPoro();
+			 auxDe->raiz->de = *this;
+			 auxDe->raiz->iz = *auxAvl;
+			 this->raiz = auxDe->raiz;
+		}
 	}else{
-	        if((*this).nodo->item.Volumen() != poro.Volumen()){
-	                if(poro.Volumen() < this->nodo->item.Volumen()){
-	                        return this->nodo->iz.Insertar(poro);
-	                }else{
-	                        return this->nodo->de.Insertar(poro);
-	                }
-	        }
-	        return false;
+		//La parte derecha es más alta
+		auxAvl = new TAVLPoro(this->raiz->de);
+		if(auxAvl->raiz->iz.EsVacio()){
+			auxAvl = new TAVLPoro(this->raiz->de);
+			this->raiz->de = TAVLPoro();
+			auxAvl->raiz->iz = *this;
+			this->raiz = auxAvl->raiz;
+		}else{
+			TAVLPoro *auxIz = new TAVLPoro(auxAvl->raiz->iz);
+			this->raiz->de = TAVLPoro();
+			auxAvl->raiz->iz = TAVLPoro();
+			auxIz->raiz->iz = *this;
+			auxIz->raiz->de = *auxAvl;
+			this->raiz = auxIz->raiz;
+		}
 	}
-
-*/
-
-
+}
 
 //Devuelve TRUE si el elemento TPoro está en el árbol
 bool TAVLPoro::Buscar(const TPoro &poro)const{
@@ -266,7 +272,7 @@ int TAVLPoro::Nodos()const{
 int TAVLPoro::NodosHoja()const{
 	int i = 0;
 	if(!(*this).EsVacio()){
-		if((*this).raiz->iz.EsVacio() && (*this).raiz->de.EsVacio())return i;
+		if((*this).raiz->iz.EsVacio() && (*this).raiz->de.EsVacio())return 1;
 		else return ((*this).raiz->iz.NodosHoja() + (*this).raiz->de.NodosHoja());
 	}
 	return i;

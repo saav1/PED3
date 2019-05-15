@@ -24,6 +24,8 @@ private:
 	void PreordenAux(TVectorPoro &, int &)const;
 	//AUXILIAR: Devuelve el recorrido en postorden
 	void PostordenAux(TVectorPoro &, int &)const;
+	//AUXILIAR: Equilibrar el árbol AVL
+	void equilibrarAux();
 
 public:	
 	//Constructor por defecto

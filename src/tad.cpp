@@ -1,43 +1,33 @@
+/************************************************************
+** INSERTAR, ALTURA, PREORDEN
+*************************************************************/
 #include <iostream>
 #include "tavlporo.h"
+
 using namespace std;
 
-
-
-int main(void)
+int
+main(void)
 {
+  TAVLPoro a;
+ 
+  TPoro p1(1,2,1,(char *) "rojo");
+  TPoro p2(1,2,2,(char *) "rojo");
+  TPoro p3(1,2,3,(char *) "rojo");
+  TPoro p4(1,2,4,(char *) "rojo");
 
-  TPoro p5(1, 2, 5, "5");
-  TPoro p4(1, 2, 4, "4");
-  TPoro p3(1, 2, 3, "3");
-  TPoro p2(1, 2, 2, "2");
-  TPoro p1(1, 2, 1, "1");
-  TAVLPoro avl;
-  TAVLPoro avl2;
-
-  avl.Insertar(p5);
-  avl.Insertar(p3);  
-  avl.Insertar(p4);
-
+  a.Insertar(p1);
+  a.Insertar(p2);
+  a.Insertar(p3);
+  if (a.Insertar(p4)) 
+  cout<<"Insertado"<<endl;
+  else cout<<"No insertado"<<endl; 
   
-  cout << "Raiz: " << avl.Raiz() << endl;
-  cout << "Altura: " << avl.Altura() << endl;  
-  cout << "Nodos: " << avl.Nodos() << endl;
-  cout << "Nodos Hoja: " << avl.NodosHoja() << endl;
-  cout << "Inorden: " << avl.Inorden() << endl;
+  if (a.Insertar(p3)) 
+  cout<<"Insertado"<<endl;
+  else cout<<"No insertado"<<endl;
 
-  cout << "-----------------------------------" << endl;
-
-  avl2.Insertar(p3);
-  avl2.Insertar(p5);
-  avl2.Insertar(p4);
-
-  cout << "Raiz: " << avl2.Raiz() << endl;
-  cout << "Altura: " << avl2.Altura() << endl;  
-  cout << "Nodos: " << avl2.Nodos() << endl;
-  cout << "Nodos Hoja: " << avl2.NodosHoja() << endl;
-  cout << "Inorden: " << avl2.Inorden() << endl;
-
-
-return 0;
+  cout << "Altura: " << a.Altura() << endl;
+  cout << a.Preorden() <<endl;
+  return 0;
 }

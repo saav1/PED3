@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <queue>
 #include "tporo.h"
 #include "tvectorporo.h"
 using namespace std;
@@ -25,7 +26,14 @@ private:
 	//AUXILIAR: Devuelve el recorrido en postorden
 	void PostordenAux(TVectorPoro &, int &)const;
 	//AUXILIAR: Equilibrar el árbol AVL
-	void equilibrarAux();
+	bool InsertarAux(const TPoro &, bool &);
+	//AUXILIAR: EquilibrarIzquierda
+	void EquilibrarIzquierda();
+	//AUXILIAR: EquilibrarDerecha
+	void EquilibrarDerecha();
+	//AUXILIAR: Imprimir
+	void Imprimir(ostream &os)const;
+
 
 public:	
 	//Constructor por defecto

@@ -108,75 +108,149 @@ bool TAVLPoro::EsVacio()const{
 
 //Inserta el elemento TPoro en el árbol
 bool TAVLPoro::Insertar(const TPoro &poro){
-	bool insOk = false;
+	bool crece = false;
+	return InsertarAux(poro, crece);
+}
+
+bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
+	bool creceIz, creceDe;
 
 	if((*this).EsVacio()){
 		TNodoAVL *avlNodo = new TNodoAVL();
 		avlNodo->item = poro;
 		this->raiz = avlNodo;
-		insOk = true;
+		crece = true;
+		return true;
+
 	}else{
-		if((*this).raiz->item.Volumen() != poro.Volumen()){
-			if(poro.Volumen() < this->raiz->item.Volumen()){
-				insOk = this->raiz->iz.Insertar(poro);
-			}else{
-				insOk = this->raiz->de.Insertar(poro);
+		 crece = creceIz = creceDe = false;
+		if(poro.Volumen() < this->raiz->item.Volumen() ){
+			this->raiz->iz.InsertarAux(poro, creceIz);
+			crece = creceIz;
+
+		}else{
+			if(poro.Volumen() > this->raiz->item.Volumen()){
+				this->raiz->de.InsertarAux(poro, creceDe);
+				crece = creceDe;
 			}
-		}else{
-			insOk = false;
 		}
 
-	}
-	int iz = ((*this).raiz->iz.EsVacio()) ? 0 : (*this).raiz->iz.Altura();
-	int de = ((*this).raiz->de.EsVacio()) ? 0 : (*this).raiz->de.Altura();
-	unsigned int eq = abs( iz - de ); 
-	if(insOk && (eq > 1) )equilibrarAux(); //Si la diff. es mayor que |1 ó -1| -> Equilibramos.
-
-
-	return insOk;
-}
-void TAVLPoro::equilibrarAux(){
-	//Puntero Auxiliar
-	TAVLPoro *auxAvl;
-	if( this->raiz->iz.Altura() > this->raiz->de.Altura()){
-		//La parte izquierda es más alta
-		auxAvl = new TAVLPoro(this->raiz->iz);
-		if(auxAvl->raiz->de.EsVacio()){
-			this->raiz->iz = TAVLPoro();
-			auxAvl->raiz->de = *this;
-			this->raiz = auxAvl->raiz;
-		}else{
-			 TAVLPoro *auxDe = new TAVLPoro(auxAvl->raiz->de);
-			 this->raiz->iz = TAVLPoro();
-			 auxAvl->raiz->de = TAVLPoro();
-			 auxDe->raiz->de = *this;
-			 auxDe->raiz->iz = *auxAvl;
-			 this->raiz = auxDe->raiz;
-		}
-	}else{
-		//La parte derecha es más alta
-		auxAvl = new TAVLPoro(this->raiz->de);
-		if(auxAvl->raiz->iz.EsVacio()){
-			auxAvl = new TAVLPoro(this->raiz->de);
-			this->raiz->de = TAVLPoro();
-			auxAvl->raiz->iz = *this;
-			this->raiz = auxAvl->raiz;
-		}else{
-			TAVLPoro *auxIz = new TAVLPoro(auxAvl->raiz->iz);
-			this->raiz->de = TAVLPoro();
-			auxAvl->raiz->iz = TAVLPoro();
-			auxIz->raiz->iz = *this;
-			auxIz->raiz->de = *auxAvl;
-			this->raiz = auxIz->raiz;
+		if(crece){
+			if( ((creceIz) && (this->raiz->fe == 1) )|| 
+				((creceDe) && (this->raiz->fe == -1) )){
+				crece = false;
+				this->raiz->fe = 0;
+			}
+			else if( (creceIz) && (this->raiz->fe == 0) ){
+				this->raiz->fe = -1;
+			}
+			else if( (creceDe) && (this->raiz->fe == 0)){
+				this->raiz->fe = 1;
+			}
+			else if( (creceIz) && (this->raiz->fe == -1) ){
+				(*this).EquilibrarIzquierda();
+			}
+			else if( (creceDe) && (this->raiz->fe == 1) ){
+				(*this).EquilibrarDerecha();
+			}
 		}
 	}
+
+	return crece;
+	
 }
+
+void TAVLPoro::EquilibrarIzquierda(){
+	TAVLPoro *auxJ, *auxK;
+	int i = 0;
+
+	if(this->raiz->iz.raiz->fe == -1){ //ROTACIÓN II
+		auxJ = new TAVLPoro(this->raiz->iz);
+		this->raiz->iz = auxJ->raiz->de;
+		auxJ->raiz->de = *this;
+		auxJ->raiz->fe = 0;
+		auxJ->raiz->de.raiz->fe = 0;
+		this->raiz = auxJ->raiz;
+
+	}else{ 							//ROTACIÓN ID
+		auxJ = new TAVLPoro(this->raiz->iz);
+		auxK = new TAVLPoro(auxJ->raiz->de);
+		i = auxK->raiz->fe;
+
+		this->raiz->iz = auxK->raiz->de;
+		auxJ->raiz->de = auxK->raiz->iz;
+		auxK->raiz->iz = *auxJ;
+		auxK->raiz->de = *this;
+		auxK->raiz->de.raiz->fe = 0;
+
+		switch(i){
+			case -1:
+					auxK->raiz->iz.raiz->fe = 0;
+					auxK->raiz->de.raiz->fe = 1;
+					break;
+			case 1:	
+					auxK->raiz->iz.raiz->fe = -1;
+					auxK->raiz->de.raiz->fe = 0;
+
+					break;
+			case 0:
+					auxK->raiz->iz.raiz->fe = 0;
+					auxK->raiz->de.raiz->fe = 0;
+					break;
+		}
+		this->raiz = auxK->raiz;
+	}
+}
+
+
+void TAVLPoro::EquilibrarDerecha(){
+	TAVLPoro *auxJ, *auxK;
+	int i = 0;
+
+	if(this->raiz->de.raiz->fe == 1){ //ROTACIÓN DD
+		auxJ = new TAVLPoro(this->raiz->de);
+		this->raiz->de = auxJ->raiz->iz;
+		auxJ->raiz->iz = *this;
+		auxJ->raiz->fe = 0;
+		auxJ->raiz->iz.raiz->fe = 0;
+		this->raiz = auxJ->raiz;
+
+	}else{ 							//ROTACIÓN DI
+		auxJ = new TAVLPoro(this->raiz->de);
+		auxK = new TAVLPoro(auxJ->raiz->iz);
+		i = auxK->raiz->fe;
+
+		this->raiz->de = auxK->raiz->iz;
+		auxJ->raiz->iz = auxK->raiz->de;
+		auxK->raiz->de = *auxJ;
+		auxK->raiz->iz = *this;
+		auxK->raiz->iz.raiz->fe = 0;
+
+		switch(i){
+			case -1:
+					auxK->raiz->de.raiz->fe = 0;
+					auxK->raiz->iz.raiz->fe = -1;
+					break;
+			case 1:	
+					auxK->raiz->de.raiz->fe = 1;
+					auxK->raiz->iz.raiz->fe = 0;
+
+					break;
+			case 0:
+					auxK->raiz->de.raiz->fe = 0;
+					auxK->raiz->iz.raiz->fe = 0;
+					break;
+		}
+		this->raiz = auxK->raiz;
+	}
+}
+
+
 
 //Devuelve TRUE si el elemento TPoro está en el árbol
 bool TAVLPoro::Buscar(const TPoro &poro)const{
 	if(this->raiz == NULL) return false;
 	if((*this).Raiz() == poro) return true;
-
 	if(poro.Volumen() < (*this).raiz->item.Volumen()) return (*this).raiz->iz.Buscar(poro);
 	else return (*this).raiz->de.Buscar(poro);
 
@@ -258,7 +332,7 @@ TPoro TAVLPoro::Raiz() const{
 int TAVLPoro::Nodos()const{
 	int i = 0;
 	if(!(*this).EsVacio()){
-		i++;
+		i = 1;
 		if((*this).raiz->iz.EsVacio() && (*this).raiz->de.EsVacio())return i;
 		else{
 			i += (*this).raiz->iz.Nodos() + (*this).raiz->de.Nodos();
@@ -327,5 +401,28 @@ void TAVLPoro::PostordenAux(TVectorPoro &v, int &pos)const{
 		(*this).raiz->de.PostordenAux(v, pos);
 		v[pos++] = (*this).Raiz();
 	}
+}
+
+ostream & operator << (ostream &os,const TAVLPoro &avl){
+	avl.Imprimir(os);
+	return os;
+}
+
+void TAVLPoro::Imprimir(ostream &os)const{
+	int i = 1;
+	queue<TAVLPoro> cola;
+	TAVLPoro *auxAvl = new TAVLPoro((*this));
+	cola.push(*auxAvl);
+	os << "[";
+	while(!cola.empty()){
+		*auxAvl = cola.front();
+		if((*this).Raiz() != auxAvl->Raiz()) os << " ";
+		os << i << " " << auxAvl->Raiz() << " (fe: " << auxAvl->raiz->fe << " )";
+		i++;
+		cola.pop();
+		if(!(auxAvl->raiz->iz.EsVacio())) cola.push(auxAvl->raiz->iz);
+		if(!(auxAvl->raiz->de.EsVacio())) cola.push(auxAvl->raiz->de);
+	}
+	os << "]";
 }
 

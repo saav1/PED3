@@ -374,7 +374,7 @@ void TAVLPoro::InordenAux(TVectorPoro &v, int &pos)const{
 TVectorPoro TAVLPoro::Preorden()const{
 	int pos = 1;
 	TVectorPoro v((*this).Nodos());
-	InordenAux(v, pos);
+	PreordenAux(v, pos);
 	return v;
 }
 
@@ -390,7 +390,7 @@ void TAVLPoro::PreordenAux(TVectorPoro &v, int &pos)const{
 TVectorPoro TAVLPoro::Postorden()const{
 	int pos = 1;
 	TVectorPoro v((*this).Nodos());
-	InordenAux(v, pos);
+	PostordenAux(v, pos);
 	return v;
 }
 

@@ -1,53 +1,41 @@
 /************************************************************
-** CONSTRUCTOR COPIA, =
+** ESVACIO, BORRAR EN UN ARBOL DE 1 ELEMENTO
 *************************************************************/
 #include <iostream>
 #include "tavlporo.h"
 
 using namespace std;
 
+
 int
-main(void)
+main()
 {
-  TAVLPoro a,b;
+  TAVLPoro arb1;
+  TVectorPoro vec;
 
   TPoro p1(1,2,1,(char *) "rojo");
-  TPoro p2(1,2,2,(char *) "rojo");
-  TPoro p3(1,2,3,(char *) "rojo");
-  TPoro p4(1,2,4,(char *) "rojo");
-  TPoro p5(1,2,5,(char *) "rojo");
+ 
+  if (arb1.EsVacio())
+  cout<<"Arbol vacio"<<endl;
+  else cout<<"Arbol no vacio"<<endl;
+ 
+  if (arb1.Borrar(p1))
+    cout<<"Elemento borrado"<<endl;
+  else cout<<"Elemento no borrado"<<endl;
 
-  a.Insertar(p1);
-  a.Insertar(p2);
-  a.Insertar(p3);
-  a.Insertar(p4);
+  arb1.Insertar(p1);
+ 
+  if (arb1.EsVacio())
+  cout<<"Arbol vacio"<<endl;
+  else cout<<"Arbol no vacio"<<endl;
 
-  TAVLPoro c(a);
-  
-  b.Insertar(p1);
-  b.Insertar(p2);
-  b.Insertar(p3);
-  b.Insertar(p4);
+  if (arb1.Borrar(p1))
+    cout<<"Elemento borrado"<<endl;
+  else cout<<"Elemento no borrado"<<endl;
+    
+  if (arb1.EsVacio())
+  cout<<"Arbol vacio"<<endl;
+  else cout<<"Arbol no vacio"<<endl;
 
-  if ( a==c )
-    cout << "IGUALES" << endl;
-  else 
-  cout << "DISTINTOS" << endl;
-
-  if ( c==b )
-    cout << "IGUALES" << endl;
-  else 
-  cout << "DISTINTOS" << endl;
-
-  b = a;
-  cout << b.Preorden() <<endl;
-  a.Insertar(p5);
-  if ( a==b )
-    cout << "IGUALES" << endl;
-  else 
-  cout << "DISTINTOS" << endl;
-
-  cout << "Altura: " << b.Altura() << endl;
-  cout << b.Preorden() <<endl;
- return 0;
+  return 0; 
 }

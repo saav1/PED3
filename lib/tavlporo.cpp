@@ -120,7 +120,6 @@ bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
 		avlNodo->item = poro;
 		this->raiz = avlNodo;
 		crece = true;
-		return true;
 
 	}else{
 		 crece = creceIz = creceDe = false;
@@ -129,10 +128,9 @@ bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
 			crece = creceIz;
 
 		}else{
-			if(poro.Volumen() > this->raiz->item.Volumen()){
-				this->raiz->de.InsertarAux(poro, creceDe);
-				crece = creceDe;
-			}
+
+			this->raiz->de.InsertarAux(poro, creceDe);
+			crece = creceDe;
 		}
 
 		if(crece){
@@ -259,10 +257,83 @@ bool TAVLPoro::Buscar(const TPoro &poro)const{
 //Borra un elemento TPoro del árbol AVL
 bool TAVLPoro::Borrar(const TPoro &poro){
 	bool deCrece = false;
-	return BorrarAux(poro, deCrece);}
+	if(!Buscar(poro)) return false;
+	else return BorrarAux(poro, deCrece);
 
-bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
+}
 
+bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){	
+	bool deCreceDe, deCreceIz;
+	if(this->Raiz() == poro){
+		if(this->Nodos() == 1 && this->NodosHoja() == 1){
+			this->~TAVLPoro();
+			deCrece = true;
+		}else{
+			deCreceDe = deCreceIz = deCrece = false;
+
+			if( (!(*this).raiz->de.EsVacio() && (*this).raiz->iz.EsVacio())
+	 		 || ((*this).raiz->de.EsVacio() && !(*this).raiz->iz.EsVacio()) ){
+
+				TAVLPoro *auxAbb = new TAVLPoro();
+				
+				if(!(*this).raiz->iz.EsVacio()){
+					*auxAbb = (*this).raiz->iz;
+					deCreceIz = true;
+				}
+				
+				if(!(*this).raiz->de.EsVacio()){
+					*auxAbb = (*this).raiz->de;	
+					deCreceDe = true;
+				}	
+				(*this).raiz = auxAbb->raiz;
+				deCrece = true;
+
+			}else{
+				//Puntero Auxiliar
+				TAVLPoro *auxAbb;
+				//El puntero auxiliar apunta al dirección de memoria, de la izquierda del abb.
+				auxAbb = &((*this).raiz->iz);
+				//Apuntando a dirección de memoria, busco el árbol que está mas a la derecha.
+				while( !(*auxAbb).raiz->de.EsVacio() ) auxAbb = &((*auxAbb).raiz->de);
+				//Asigno el item que va a ser suistituido.
+				(*this).raiz->item = (*auxAbb).raiz->item;
+				//LLamo al destructor del árbol. Del árbol sustituido. Más grande de la izquierda.
+				if( (*auxAbb).Nodos() == 1 ){
+					//No tiene hijos.
+					(*auxAbb).~TAVLPoro();
+					deCrece = true;
+				}else{
+					//Tiene hijos. LLamada recursiva.
+					(*auxAbb).BorrarAux((*auxAbb).raiz->item, deCreceIz);
+				}
+			}
+		}
+
+		if(deCrece){
+			if( (deCreceIz && this->raiz->fe == 1) 
+				|| (deCreceDe && this->raiz->fe == -1) ){
+				deCrece = false;
+				this->raiz->fe = 0;
+			}else if( deCreceIz && this->raiz->fe == 0 ){
+				this->raiz->fe = 1;
+			
+			}else if( deCreceDe && this->raiz->fe == 0 ){
+				this->raiz->fe = -1;
+			
+			}else if( deCreceDe && this->raiz->fe == -1 ){
+				this->EquilibrarIzquierda();
+			
+			}else if( deCreceIz && this->raiz->fe == 1 ){
+				this->EquilibrarDerecha();
+			}
+
+		}
+	}
+
+	if(!(*this).raiz->de.EsVacio()&&(*this).raiz->de.Buscar(poro)) return (*this).raiz->de.Borrar(poro);
+	if(!(*this).raiz->iz.EsVacio()&&(*this).raiz->iz.Buscar(poro)) return (*this).raiz->iz.Borrar(poro);
+	
+	return deCrece;
 }
 
 

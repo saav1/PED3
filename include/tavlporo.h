@@ -25,8 +25,10 @@ private:
 	void PreordenAux(TVectorPoro &, int &)const;
 	//AUXILIAR: Devuelve el recorrido en postorden
 	void PostordenAux(TVectorPoro &, int &)const;
-	//AUXILIAR: Equilibrar el árbol AVL
+	//AUXILIAR: Insertar
 	bool InsertarAux(const TPoro &, bool &);
+	//AUXILIAR: Borrar
+	bool BorrarAux(const TPoro &, bool &);
 	//AUXILIAR: EquilibrarIzquierda
 	void EquilibrarIzquierda();
 	//AUXILIAR: EquilibrarDerecha

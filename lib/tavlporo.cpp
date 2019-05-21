@@ -258,52 +258,14 @@ bool TAVLPoro::Buscar(const TPoro &poro)const{
 
 //Borra un elemento TPoro del árbol AVL
 bool TAVLPoro::Borrar(const TPoro &poro){
-	return 1;
+	bool deCrece = false;
+	return BorrarAux(poro, deCrece);}
+
+bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
+
 }
 
-/*	BORRAR
-	if( !Buscar(poro) ) return false;
-	if( (*this).Raiz() == poro ){
-	        if((*this).Nodos() == 1 && (*this).NodosHoja()  == 1){
-	                //cout << "[1] " ;
-	                (*this).~TABBPoro();
-	                return true;
-	        }
-	        if( (!(*this).nodo->de.EsVacio() && (*this).nodo->iz.EsVacio())
-	                 || ((*this).nodo->de.EsVacio() && !(*this).nodo->iz.EsVacio()) ){
 
-	                TABBPoro *auxAbb = new TABBPoro();
-	                if(!(*this).nodo->iz.EsVacio()) *auxAbb = (*this).nodo->iz;
-	                if(!(*this).nodo->de.EsVacio()) *auxAbb = (*this).nodo->de;
-	                (*this).nodo = auxAbb->nodo;
-	                return true;
-	        }
-	        else{
-
-	                //Puntero Auxiliar
-	                TABBPoro *auxAbb;
-	                //El puntero auxiliar apunta al dirección de memoria, de la izquierda del abb.
-	                auxAbb = &((*this).nodo->iz);
-	                //Apuntando a dirección de memoria, busco el árbol que está mas a la derecha.
-	                while( !(*auxAbb).nodo->de.EsVacio() ) auxAbb = &((*auxAbb).nodo->de);
-	                //Asigno el item el item que va a ser suistituido.
-	                (*this).nodo->item = (*auxAbb).nodo->item;
-	                //LLamo al destructor del árbol. Del árbol sustituido. Más grande de la izquierda.
-	                if( (*auxAbb).Nodos() == 1 ){
-	                        //No tiene hijos.
-	                        (*auxAbb).~TABBPoro();
-	                }else{
-	                        //Tiene hijos. LLamada recursiva.
-	                        (*auxAbb).Borrar((*auxAbb).nodo->item);
-	                }
-	                return true;
-	        }
-	}
-	if(!(*this).nodo->de.EsVacio()&&(*this).nodo->de.Buscar(poro)) return (*this).nodo->de.Borrar(poro);
-	if(!(*this).nodo->iz.EsVacio()&&(*this).nodo->iz.Buscar(poro)) return (*this).nodo->iz.Borrar(poro);
-	return false;
-}
-*/
 
 
 

@@ -269,6 +269,7 @@ bool TAVLPoro::Borrar(const TPoro &poro){
 bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){	
 	bool deCreceDe = false;
 	bool deCreceIz = false;
+	bool borrar = true;
 
 
 	if(this->Raiz() == poro){
@@ -276,7 +277,7 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 		if(this->Nodos() == 1 && this->NodosHoja() == 1){ //En un nodo hoja. 
 			this->~TAVLPoro();
 			deCrece = true;
-
+			
 		}else{
 
 			deCreceDe = deCreceIz = deCrece = false;
@@ -289,6 +290,7 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 				if(!(*this).raiz->iz.EsVacio()){
 					*auxAbb = (*this).raiz->iz; //Decrece por la iz.
 					deCreceIz = true;
+
 				}
 				
 				if(!(*this).raiz->de.EsVacio()){
@@ -340,7 +342,7 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 	if(deCrece){
 		if( (deCreceIz && this->raiz->fe == -1) 
 			|| (deCreceDe && this->raiz->fe == 1) ){
-			
+		
 			deCrece = false;
 			this->raiz->fe = 0;
 
@@ -357,10 +359,9 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 			this->EquilibrarDerechaBorrar(deCrece);
 	
 		}
-
 	}
 
-	return deCrece;
+	return borrar;
 }
 
 
@@ -376,7 +377,7 @@ void TAVLPoro::EquilibrarIzquierdaBorrar(bool &decrece){
 		auxJ->raiz->fe = 0;
 		auxJ->raiz->de.raiz->fe = 0;
 		this->raiz = auxJ->raiz;
-		//decrece = true;
+		decrece = true;
 
 	}else if(this->raiz->iz.raiz->fe == 0){
 		auxJ = new TAVLPoro(this->raiz->iz);
@@ -385,7 +386,7 @@ void TAVLPoro::EquilibrarIzquierdaBorrar(bool &decrece){
 		auxJ->raiz->fe = 1;
 		auxJ->raiz->de.raiz->fe = 1;
 		this->raiz = auxJ->raiz;
-		//decrece = false;
+		decrece = false;
 
 	}else{ 							//ROTACIÓN ID
 		auxJ = new TAVLPoro(this->raiz->iz);
@@ -397,7 +398,7 @@ void TAVLPoro::EquilibrarIzquierdaBorrar(bool &decrece){
 		auxK->raiz->iz = *auxJ;
 		auxK->raiz->de = *this;
 		auxK->raiz->de.raiz->fe = 0;
-		//decrece = true;
+		decrece = true;
 
 		switch(i){
 			case -1:
@@ -430,7 +431,7 @@ void TAVLPoro::EquilibrarDerechaBorrar(bool &decrece){
 		auxJ->raiz->fe = 0;
 		auxJ->raiz->iz.raiz->fe = 0;
 		this->raiz = auxJ->raiz;
-		//decrece = true;
+		decrece = true;
 	}
 	else if(this->raiz->de.raiz->fe == 0){
 		auxJ = new TAVLPoro(this->raiz->de);
@@ -439,7 +440,7 @@ void TAVLPoro::EquilibrarDerechaBorrar(bool &decrece){
 		auxJ->raiz->fe = -1;
 		auxJ->raiz->iz.raiz->fe = -1;
 		this->raiz = auxJ->raiz;
-		//decrece = false;
+		decrece = false;
 	}
 	else{ 							//ROTACIÓN DI
 		auxJ = new TAVLPoro(this->raiz->de);
@@ -451,7 +452,7 @@ void TAVLPoro::EquilibrarDerechaBorrar(bool &decrece){
 		auxK->raiz->de = *auxJ;
 		auxK->raiz->iz = *this;
 		auxK->raiz->iz.raiz->fe = 0;
-		//decrece = true;
+		decrece = true;
 
 		switch(i){
 			case -1:

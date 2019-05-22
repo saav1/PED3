@@ -267,28 +267,36 @@ bool TAVLPoro::Borrar(const TPoro &poro){
 }
 
 bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){	
-	bool deCreceDe, deCreceIz;
+	bool deCreceDe = false;
+	bool deCreceIz = false;
+
+
 	if(this->Raiz() == poro){
-		if(this->Nodos() == 1 && this->NodosHoja() == 1){
+
+		if(this->Nodos() == 1 && this->NodosHoja() == 1){ //En un nodo hoja. 
 			this->~TAVLPoro();
 			deCrece = true;
+
 		}else{
+
 			deCreceDe = deCreceIz = deCrece = false;
 
-			if( (!(*this).raiz->de.EsVacio() && (*this).raiz->iz.EsVacio())
+			if( (!(*this).raiz->de.EsVacio() && (*this).raiz->iz.EsVacio()) //Si te un fill.
 	 		 || ((*this).raiz->de.EsVacio() && !(*this).raiz->iz.EsVacio()) ){
 
 				TAVLPoro *auxAbb = new TAVLPoro();
 				
 				if(!(*this).raiz->iz.EsVacio()){
-					*auxAbb = (*this).raiz->iz;
+					*auxAbb = (*this).raiz->iz; //Decrece por la iz.
 					deCreceIz = true;
 				}
 				
 				if(!(*this).raiz->de.EsVacio()){
+
 					*auxAbb = (*this).raiz->de;	
 					deCreceDe = true;
 				}	
+
 				(*this).raiz = auxAbb->raiz;
 				deCrece = true;
 
@@ -306,38 +314,50 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 					//No tiene hijos.
 					(*auxAbb).~TAVLPoro();
 					deCrece = true;
+
 				}else{
 					//Tiene hijos. LLamada recursiva.
-					(*auxAbb).Borrar((*auxAbb).raiz->item);
+					(*auxAbb).BorrarAux((*auxAbb).raiz->item, deCreceIz);
+					deCrece = deCreceIz;
 				}
 			}
 		}
 
-		if(deCrece){
-			if( (deCreceIz && this->raiz->fe == 1) 
-				|| (deCreceDe && this->raiz->fe == -1) ){
-				deCrece = false;
-				this->raiz->fe = 0;
-			}else if( deCreceIz && this->raiz->fe == 0 ){
-				this->raiz->fe = 1;
-			
-			}else if( deCreceDe && this->raiz->fe == 0 ){
-				this->raiz->fe = -1;
-			
-			}else if( deCreceDe && this->raiz->fe == -1 ){
-				this->EquilibrarIzquierda();
-			
-			}else if( deCreceIz && this->raiz->fe == 1 ){
-				this->EquilibrarDerecha();
-			}
-
-		}
-
 	}
 
+	
 	if(!deCrece){
-		if(!(*this).raiz->de.EsVacio()&&(*this).raiz->de.Buscar(poro)) deCrece =  (*this).raiz->de.Borrar(poro);
-		if(!(*this).raiz->iz.EsVacio()&&(*this).raiz->iz.Buscar(poro)) deCrece =  (*this).raiz->iz.Borrar(poro);		
+		if(!(*this).raiz->de.EsVacio()&&(*this).raiz->de.Buscar(poro)){
+			(*this).raiz->de.BorrarAux(poro, deCreceDe);
+			deCrece = deCreceDe;
+		} 
+		if(!(*this).raiz->iz.EsVacio()&&(*this).raiz->iz.Buscar(poro)){
+			(*this).raiz->iz.BorrarAux(poro, deCreceIz);		
+			deCrece = deCreceIz;
+		} 
+	}
+
+	if(deCrece){
+		if( (deCreceIz && this->raiz->fe == -1) 
+			|| (deCreceDe && this->raiz->fe == 1) ){
+			
+			deCrece = false;
+			this->raiz->fe = 0;
+
+		}else if( deCreceIz && this->raiz->fe == 0 ){
+			this->raiz->fe = 1;
+		
+		}else if( deCreceDe && this->raiz->fe == 0 ){
+			this->raiz->fe = -1;
+		
+		}else if( deCreceDe && this->raiz->fe == -1 ){
+			this->EquilibrarIzquierdaBorrar(deCrece);
+		
+		}else if( deCreceIz && this->raiz->fe == 1 ){
+			this->EquilibrarDerechaBorrar(deCrece);
+	
+		}
+
 	}
 
 	return deCrece;
@@ -345,6 +365,112 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 
 
 
+void TAVLPoro::EquilibrarIzquierdaBorrar(bool &decrece){
+	TAVLPoro *auxJ, *auxK;
+	int i = 0;
+
+	if(this->raiz->iz.raiz->fe == -1){ //ROTACIÓN II
+		auxJ = new TAVLPoro(this->raiz->iz);
+		this->raiz->iz = auxJ->raiz->de;
+		auxJ->raiz->de = *this;
+		auxJ->raiz->fe = 0;
+		auxJ->raiz->de.raiz->fe = 0;
+		this->raiz = auxJ->raiz;
+		//decrece = true;
+
+	}else if(this->raiz->iz.raiz->fe == 0){
+		auxJ = new TAVLPoro(this->raiz->iz);
+		this->raiz->iz = auxJ->raiz->de;
+		auxJ->raiz->de = *this;
+		auxJ->raiz->fe = 1;
+		auxJ->raiz->de.raiz->fe = 1;
+		this->raiz = auxJ->raiz;
+		//decrece = false;
+
+	}else{ 							//ROTACIÓN ID
+		auxJ = new TAVLPoro(this->raiz->iz);
+		auxK = new TAVLPoro(auxJ->raiz->de);
+		i = auxK->raiz->fe;
+
+		this->raiz->iz = auxK->raiz->de;
+		auxJ->raiz->de = auxK->raiz->iz;
+		auxK->raiz->iz = *auxJ;
+		auxK->raiz->de = *this;
+		auxK->raiz->de.raiz->fe = 0;
+		//decrece = true;
+
+		switch(i){
+			case -1:
+					auxK->raiz->iz.raiz->fe = 0;
+					auxK->raiz->de.raiz->fe = 1;
+					break;
+			case 1:	
+					auxK->raiz->iz.raiz->fe = -1;
+					auxK->raiz->de.raiz->fe = 0;
+
+					break;
+			case 0:
+					auxK->raiz->iz.raiz->fe = 0;
+					auxK->raiz->de.raiz->fe = 0;
+					break;
+		}
+		this->raiz = auxK->raiz;
+	}
+}
+
+
+void TAVLPoro::EquilibrarDerechaBorrar(bool &decrece){
+	TAVLPoro *auxJ, *auxK;
+	int i = 0;
+
+	if(this->raiz->de.raiz->fe == 1){ //ROTACIÓN DD
+		auxJ = new TAVLPoro(this->raiz->de);
+		this->raiz->de = auxJ->raiz->iz;
+		auxJ->raiz->iz = *this;
+		auxJ->raiz->fe = 0;
+		auxJ->raiz->iz.raiz->fe = 0;
+		this->raiz = auxJ->raiz;
+		//decrece = true;
+	}
+	else if(this->raiz->de.raiz->fe == 0){
+		auxJ = new TAVLPoro(this->raiz->de);
+		this->raiz->de = auxJ->raiz->iz;
+		auxJ->raiz->iz = *this;
+		auxJ->raiz->fe = -1;
+		auxJ->raiz->iz.raiz->fe = -1;
+		this->raiz = auxJ->raiz;
+		//decrece = false;
+	}
+	else{ 							//ROTACIÓN DI
+		auxJ = new TAVLPoro(this->raiz->de);
+		auxK = new TAVLPoro(auxJ->raiz->iz);
+		i = auxK->raiz->fe;
+
+		this->raiz->de = auxK->raiz->iz;
+		auxJ->raiz->iz = auxK->raiz->de;
+		auxK->raiz->de = *auxJ;
+		auxK->raiz->iz = *this;
+		auxK->raiz->iz.raiz->fe = 0;
+		//decrece = true;
+
+		switch(i){
+			case -1:
+					auxK->raiz->de.raiz->fe = 0;
+					auxK->raiz->iz.raiz->fe = -1;
+					break;
+			case 1:	
+					auxK->raiz->de.raiz->fe = 1;
+					auxK->raiz->iz.raiz->fe = 0;
+
+					break;
+			case 0:
+					auxK->raiz->de.raiz->fe = 0;
+					auxK->raiz->iz.raiz->fe = 0;
+					break;
+		}
+		this->raiz = auxK->raiz;
+	}
+}
 
 
 //Devuelve la altura del árbol. La altura de un árbol vacío es 0.

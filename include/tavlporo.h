@@ -33,8 +33,16 @@ private:
 	void EquilibrarIzquierda();
 	//AUXILIAR: EquilibrarDerecha
 	void EquilibrarDerecha();
+
+	//AUXILIAR: EquilibrarIzquierda - (Cuando Borramos)
+	void EquilibrarIzquierdaBorrar(bool &);
+	//AUXILIAR: EquilibrarDerecha - (Cuando Borramos)
+	void EquilibrarDerechaBorrar(bool &);
+	
 	//AUXILIAR: Imprimir
 	void Imprimir(ostream &os)const;
+
+
 
 
 public:	

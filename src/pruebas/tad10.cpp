@@ -1,5 +1,5 @@
 /************************************************************
-** BORRAR CON ROTACION II
+** BORRAR CON ROTACION DD
 *************************************************************/
 #include <iostream>
 #include "tavlporo.h"
@@ -19,17 +19,17 @@ main()
   TPoro p5(1,2,5,(char *) "rojo");
   TPoro p6(1,2,6,(char *) "rojo");
 
-  arb1.Insertar(p6);
-  arb1.Insertar(p4);
+  arb1.Insertar(p5);
   arb1.Insertar(p2);
   arb1.Insertar(p1);
   arb1.Insertar(p3);
+  arb1.Insertar(p6);
  cout<<arb1.Preorden()<<endl;
- if (arb1.Borrar(p5))
+ if (arb1.Borrar(p4))
   	cout<<"Elemento borrado"<<endl;
  else cout<<"Elemento no borrado"<<endl;
  
- if (arb1.Borrar(p6))
+ if (arb1.Borrar(p1))
   	cout<<"Elemento borrado"<<endl;
   else cout<<"Elemento no borrado"<<endl;
  

@@ -5,6 +5,7 @@
 /*.................................TNODOAVL...........................................*/
 //Constructor TNodo
 TNodoAVL::TNodoAVL(){
+
 	this->item =  TPoro();
 	this->iz = TAVLPoro();
 	this->de = TAVLPoro();
@@ -55,8 +56,10 @@ TAVLPoro::TAVLPoro(){
 TAVLPoro::TAVLPoro(const TAVLPoro &avl){
 	if(this == &avl){
 		(*this).~TAVLPoro();
+
 	}
 	if(!avl.EsVacio())this->raiz = new TNodoAVL(*avl.raiz);
+	else this->raiz = NULL;
 }
 
 //Destructor 
@@ -74,8 +77,8 @@ TAVLPoro & TAVLPoro::operator = (const TAVLPoro &avl){
 	else{
 		(*this).~TAVLPoro();
 		if(!avl.EsVacio()) this->raiz = new TNodoAVL(*avl.raiz);
+		return *this;
 	}
-	return *this;
 }
 
 //Sobrecarga del operador igualdad
@@ -109,7 +112,8 @@ bool TAVLPoro::EsVacio()const{
 //Inserta el elemento TPoro en el árbol
 bool TAVLPoro::Insertar(const TPoro &poro){
 	bool crece = false;
-	return InsertarAux(poro, crece);
+	if(Buscar(poro)) return false;
+	else return InsertarAux(poro, crece); 
 }
 
 bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
@@ -304,7 +308,7 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 					deCrece = true;
 				}else{
 					//Tiene hijos. LLamada recursiva.
-					(*auxAbb).BorrarAux((*auxAbb).raiz->item, deCreceIz);
+					(*auxAbb).Borrar((*auxAbb).raiz->item);
 				}
 			}
 		}
@@ -328,11 +332,14 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 			}
 
 		}
+
 	}
 
-	if(!(*this).raiz->de.EsVacio()&&(*this).raiz->de.Buscar(poro)) return (*this).raiz->de.Borrar(poro);
-	if(!(*this).raiz->iz.EsVacio()&&(*this).raiz->iz.Buscar(poro)) return (*this).raiz->iz.Borrar(poro);
-	
+	if(!deCrece){
+		if(!(*this).raiz->de.EsVacio()&&(*this).raiz->de.Buscar(poro)) deCrece =  (*this).raiz->de.Borrar(poro);
+		if(!(*this).raiz->iz.EsVacio()&&(*this).raiz->iz.Buscar(poro)) deCrece =  (*this).raiz->iz.Borrar(poro);		
+	}
+
 	return deCrece;
 }
 
@@ -437,11 +444,14 @@ void TAVLPoro::PostordenAux(TVectorPoro &v, int &pos)const{
 }
 
 ostream & operator << (ostream &os,const TAVLPoro &avl){
-	avl.Imprimir(os);
+//	avl.Imprimir(os);
+
+	os << avl.Inorden();
 	return os;
 }
 
 void TAVLPoro::Imprimir(ostream &os)const{
+	/* RECORRIDO POR NIVELES
 	int i = 1;
 	queue<TAVLPoro> cola;
 	TAVLPoro *auxAvl = new TAVLPoro((*this));
@@ -450,12 +460,12 @@ void TAVLPoro::Imprimir(ostream &os)const{
 	while(!cola.empty()){
 		*auxAvl = cola.front();
 		if((*this).Raiz() != auxAvl->Raiz()) os << " ";
-		os << i << " " << auxAvl->Raiz() << " (fe: " << auxAvl->raiz->fe << " )";
+		os << i << " " << auxAvl->Raiz();
 		i++;
 		cola.pop();
 		if(!(auxAvl->raiz->iz.EsVacio())) cola.push(auxAvl->raiz->iz);
 		if(!(auxAvl->raiz->de.EsVacio())) cola.push(auxAvl->raiz->de);
 	}
-	os << "]";
+	os << "]";*/
 }
 

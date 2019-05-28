@@ -128,9 +128,7 @@ bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
 		if(poro.Volumen() < this->raiz->item.Volumen() ){
 			this->raiz->iz.InsertarAux(poro, creceIz);
 			crece = creceIz;
-
 		}else{
-
 			this->raiz->de.InsertarAux(poro, creceDe);
 			crece = creceDe;
 		}
@@ -141,21 +139,22 @@ bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
 			((creceDe) && (this->raiz->fe == -1) )){
 			crece = false;
 			this->raiz->fe = 0;
-		}
-		else if( (creceIz) && (this->raiz->fe == 0) ){
+
+		}else if( (creceIz) && (this->raiz->fe == 0) ){
 			this->raiz->fe = -1;
-		}
-		else if( (creceDe) && (this->raiz->fe == 0)){
+
+		}else if( (creceDe) && (this->raiz->fe == 0)){
 			this->raiz->fe = 1;
-		}
-		else if( (creceIz) && (this->raiz->fe == -1) ){
+
+		}else if( (creceIz) && (this->raiz->fe == -1) ){
 			(*this).EquilibrarIzquierda();
-		}
-		else if( (creceDe) && (this->raiz->fe == 1) ){
+			crece = false;
+
+		}else if( (creceDe) && (this->raiz->fe == 1) ){
 			(*this).EquilibrarDerecha();
+			crece = false;
 		}
 	}
-
 	return true;
 }
 
@@ -164,20 +163,25 @@ void TAVLPoro::EquilibrarIzquierda(){
 	int i = 0;
 
 	if(this->raiz->iz.raiz->fe == -1){ //ROTACIÓN II
-		cout << "rotacion ii" << endl;
-		cout << this->Raiz() << endl;
+
+		//cout << "[II]" << endl;
+
+
+		//cout << "item: " << this->Raiz() << "thisFE: " << this->raiz->fe << endl;
+		//cout << "itemIz: " << this->raiz->iz.Raiz() << "izFe: " << this->raiz->iz.raiz->fe << endl;
+
 
 		auxJ = new TAVLPoro(this->raiz->iz);
 		this->raiz->iz = auxJ->raiz->de;
 		auxJ->raiz->de = *this;
 		auxJ->raiz->fe = 0;
+		
 		auxJ->raiz->de.raiz->fe = 0;
 		this->raiz = auxJ->raiz;
 
-		cout << this->Raiz() << endl;
-
-
 	}else{ 							//ROTACIÓN ID
+
+		//cout << "[ID]" << endl;
 		auxJ = new TAVLPoro(this->raiz->iz);
 		auxK = new TAVLPoro(auxJ->raiz->de);
 		i = auxK->raiz->fe;

@@ -1,5 +1,6 @@
 //STALYN ALEJANDRO ALCOCER VALENCIA, DNI:20947870E
 #include "tavlporo.h"
+#include "math.h"
 
 
 /*.................................TNODOAVL...........................................*/
@@ -163,19 +164,10 @@ void TAVLPoro::EquilibrarIzquierda(){
 	int i = 0;
 
 	if(this->raiz->iz.raiz->fe == -1){ //ROTACIÓN II
-
-		//cout << "[II]" << endl;
-
-
-		//cout << "item: " << this->Raiz() << "thisFE: " << this->raiz->fe << endl;
-		//cout << "itemIz: " << this->raiz->iz.Raiz() << "izFe: " << this->raiz->iz.raiz->fe << endl;
-
-
 		auxJ = new TAVLPoro(this->raiz->iz);
 		this->raiz->iz = auxJ->raiz->de;
 		auxJ->raiz->de = *this;
 		auxJ->raiz->fe = 0;
-		
 		auxJ->raiz->de.raiz->fe = 0;
 		this->raiz = auxJ->raiz;
 
@@ -261,7 +253,6 @@ bool TAVLPoro::Buscar(const TPoro &poro)const{
 	if((*this).Raiz() == poro) return true;
 	if(poro.Volumen() < (*this).raiz->item.Volumen()) return (*this).raiz->iz.Buscar(poro);
 	else return (*this).raiz->de.Buscar(poro);
-
 }
 
 //Borra un elemento TPoro del árbol AVL
@@ -269,7 +260,6 @@ bool TAVLPoro::Borrar(const TPoro &poro){
 	bool deCrece = false;
 	if(!Buscar(poro)) return false;
 	else return BorrarAux(poro, deCrece);
-
 }
 
 bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){	
@@ -314,6 +304,7 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 				while( !(*auxAbb).raiz->de.EsVacio() ) auxAbb = &((*auxAbb).raiz->de);
 				//Asigno el item que va a ser suistituido.
 				(*this).raiz->item = (*auxAbb).raiz->item;
+				(*this).raiz->fe = abs( (this->raiz->iz.raiz->fe) - (this->raiz->de.raiz->fe) );
 				//LLamo al destructor del árbol. Del árbol sustituido. Más grande de la izquierda.
 				if( (*auxAbb).Nodos() == 1 ){
 					//No tiene hijos.

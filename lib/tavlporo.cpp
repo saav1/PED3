@@ -303,8 +303,9 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 				//Apuntando a dirección de memoria, busco el árbol que está mas a la derecha.
 				while( !(*auxAbb).raiz->de.EsVacio() ) auxAbb = &((*auxAbb).raiz->de);
 				//Asigno el item que va a ser suistituido.
+				(*auxAbb).raiz->fe = (*auxAbb).raiz->iz.Altura() - (*this).raiz->de.Altura();
 				(*this).raiz->item = (*auxAbb).raiz->item;
-				(*this).raiz->fe = abs( (this->raiz->iz.raiz->fe) - (this->raiz->de.raiz->fe) );
+				(*this).raiz->fe =  (this->raiz->iz.Altura()) - (this->raiz->de.Altura());
 				//LLamo al destructor del árbol. Del árbol sustituido. Más grande de la izquierda.
 				if( (*auxAbb).Nodos() == 1 ){
 					//No tiene hijos.

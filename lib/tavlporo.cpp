@@ -134,28 +134,29 @@ bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
 			this->raiz->de.InsertarAux(poro, creceDe);
 			crece = creceDe;
 		}
+	}
 
-		if(crece){
-			if( ((creceIz) && (this->raiz->fe == 1) )|| 
-				((creceDe) && (this->raiz->fe == -1) )){
-				crece = false;
-				this->raiz->fe = 0;
-			}
-			else if( (creceIz) && (this->raiz->fe == 0) ){
-				this->raiz->fe = -1;
-			}
-			else if( (creceDe) && (this->raiz->fe == 0)){
-				this->raiz->fe = 1;
-			}
-			else if( (creceIz) && (this->raiz->fe == -1) ){
-				(*this).EquilibrarIzquierda();
-			}
-			else if( (creceDe) && (this->raiz->fe == 1) ){
-				(*this).EquilibrarDerecha();
-			}
+	if(crece){
+		if( ((creceIz) && (this->raiz->fe == 1) )|| 
+			((creceDe) && (this->raiz->fe == -1) )){
+			crece = false;
+			this->raiz->fe = 0;
+		}
+		else if( (creceIz) && (this->raiz->fe == 0) ){
+			this->raiz->fe = -1;
+		}
+		else if( (creceDe) && (this->raiz->fe == 0)){
+			this->raiz->fe = 1;
+		}
+		else if( (creceIz) && (this->raiz->fe == -1) ){
+			(*this).EquilibrarIzquierda();
+		}
+		else if( (creceDe) && (this->raiz->fe == 1) ){
+			(*this).EquilibrarDerecha();
 		}
 	}
-	return crece;
+
+	return true;
 }
 
 void TAVLPoro::EquilibrarIzquierda(){
@@ -163,12 +164,18 @@ void TAVLPoro::EquilibrarIzquierda(){
 	int i = 0;
 
 	if(this->raiz->iz.raiz->fe == -1){ //ROTACIÓN II
+		cout << "rotacion ii" << endl;
+		cout << this->Raiz() << endl;
+
 		auxJ = new TAVLPoro(this->raiz->iz);
 		this->raiz->iz = auxJ->raiz->de;
 		auxJ->raiz->de = *this;
 		auxJ->raiz->fe = 0;
 		auxJ->raiz->de.raiz->fe = 0;
 		this->raiz = auxJ->raiz;
+
+		cout << this->Raiz() << endl;
+
 
 	}else{ 							//ROTACIÓN ID
 		auxJ = new TAVLPoro(this->raiz->iz);
@@ -577,20 +584,6 @@ se encuentra en un nodo que es hijo derecho de su nodo padre.
 3: Si el elemento que ocupa la posición 'i' en la lista 
 se encuentra en uno que es raíz del árbol. 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

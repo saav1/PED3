@@ -1,16 +1,16 @@
 #ifndef _TAVLPORO_
 #define _TAVLPORO_
-
 #include <iostream>
 #include <cstdlib>
 #include <queue>
 #include "tporo.h"
 #include "tvectorporo.h"
-using namespace std;
+#include "tlistaporo.h"
+#include "tabbporo.h"
 
+using namespace std;
 class TNodoAVL;
 class TAVLPoro;
-
 class TAVLPoro{
 friend class TNodoAVL;
 //Sobrecarga del operador de salida
@@ -39,12 +39,6 @@ private:
 	//AUXILIAR: EquilibrarDerecha - (Cuando Borramos)
 	void EquilibrarDerechaBorrar(bool &);
 	
-	//AUXILIAR: Imprimir
-	void Imprimir(ostream &os)const;
-
-
-
-
 public:	
 	//Constructor por defecto
 	TAVLPoro();
@@ -54,7 +48,6 @@ public:
 	~TAVLPoro();
 	//Sobrecarga del operador asignación
 	TAVLPoro & operator = (const TAVLPoro &);
-
 	//Métodos
 	//Sobrecarga del operador igualdad
 	bool operator == (const TAVLPoro &)const;
@@ -76,13 +69,21 @@ public:
 	int Nodos()const;
 	//Devuelve el número de nodos hoja en el árbol. La raíz puede ser hoja. 
 	int NodosHoja()const;
-
 	//Devuelve el recorrido en Inorden sobre un vector 
 	TVectorPoro Inorden()const;
 	//Devuelve el recorrido en Preorden sobre un vector 
 	TVectorPoro Preorden()const;
 	//Devuelve el recorrido en Postorden sobre un vecor
 	TVectorPoro Postorden()const;
+
+	//BuscaAVL
+	/*
+	Devuelve un VECTOR DE ENTEROS del mismo tamaño que la lista
+	pasada como parámetro. En cada posición v[i] del vector devuelto
+	se debe guardar la siguiente información.                    
+	*/
+
+ 	TVectorPoro BuscaAVL(TListaPoro &)const; 
 };
 
 class TNodoAVL{
@@ -110,56 +111,38 @@ public:
 #endif
 
 /*
-........................ACLARACIONES TAVLPoro...........................
+Archivos a entregar (incluyendo la función BuscaAVL) 
+	indlude: tcalendario.h, tvectorcalendario.h, 
+	tlistacalendario.h, tabbcalendario.h, tavlcalendario.h, 
+	lib: tcalendario.cpp, tvectorcalendario.cpp, tlistacalendario.cpp, 
+	tabbcalendario.cpp, tavlcalendario.cpp
 
-1. Se permite amistad entre las clases.
+Añadir la función int* BuscaAVL (TListaCAlendario &), que develuve un 
+VECTOR DE ENTEROS del mismo tamaño que la lista 
+pasada como parámetro. En cada posición v[i] del vector devuelto se debe
+ guardar la siguiente información.
+	
+		0: Si el elemento que ocupa la posición 'i' en la lista 
+		no se encuentra en el árbol.
+		1: Si el elemento que ocupa la posición 'i' en la lista 
+		se encuentra en un nodo que es hijo izquierdo de su nodo padre.
+		2: Si el elemento que ocupa la posición 'i' en la lista 
+		se encuentra en un nodo que es hijo derecho de su nodo padre. 
+		3: Si el elemento que ocupa la posición 'i' en la lista 
+		se encuentra en uno que es raíz del árbol. 
 
-2.TVectorPoro TAVLPoro::Inorden()
-       {
-             int posicion = 1;
-       // Vector del tamaño adecuado para almacenar todos los nodos
-             TVectorPoro v(Nodos());
-             InordenAux(v, posicion);
-             return v;
-}
-De este modo, se reduce el coste de crear múltiples objetos de tipo 
-TVectorPoro, ya que sólo se emplea uno durante todo el cálculo del 
-recorrido.	
-
-3. El criterio de ordenación para los elementos TPoro sigue siendo el 
-mismo. 
-
-4. Para simplificar los algoritmos, el árbol NO puede contener elementos
-con vólumenes repetidos. 
-
-5. El CONSTRUCTOR DE COPIA tiene que realizar una copia exacta 
-duplicando todos los nodos del árbol. 
-
-6. El DESTRUCTOR tiene que liberar toda la memoria que ocupe el árbol.
-
-7. Si se asigna un árbol a un árbol no vacío, se destruye el árbol incial.
-La ASIGNACIÓN tiene que realizar una copia exacta duplicando todos los
-nodos del árbol. 
-
-8. En el operador '==', dos árboles son iguales si poseen los mismos
-elementos independientemente de la estructura interna del árbol. 
-NO se exige que la estructura de ambos sea la misma. 
-
-9. INSERTAR devuelve TRUE si el elemento se puede insertar y FALSE en 
-caso contrario. Por ejemplo, por que el árbol ya existe. 
-
-10. BORRAR devuelve TRUE si el elemento se puede borrar y FALSE en caso
-contrario. 
-EL CRITERIO DE BORRADO ES SUSTITUIR POR EL MAYOR DE LA IZQUIERDA. 
-
-11. RAIZ devuelve el TPoro raíz del árbol. Si el árbol está vacío, devuelve
-un TPoro vacío.
-
-12. El operador de SALIDA muestra recorrido por Inorden del AVL, con el 
-formato pedido en el CUARDENILLO 1 para la clase TVectorPoro. 
-
-13. Los tres recorridos devuelven un vector (TVectorPoro) en la que todas
-las posiciones están ocupadas por los elementos del árbol. No pueden quedar
-posiciones sin asignar. Si el árbol está vacío, se devuelve un vector vacío
--vector dimension 0-
+La lista pasada como parámetro se recorre de izquierda a derecha. 
+Si la lista entrante es vacía: Devolver un puntero Nulo.
+si el árbol es vacío: Devolver un vector del tamaño de la lista
+conteniendo ceros en todas sus posiciones. 
 */
+
+
+
+
+
+
+
+
+
+

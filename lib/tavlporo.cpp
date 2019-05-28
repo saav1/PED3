@@ -44,9 +44,7 @@ TNodoAVL & TNodoAVL::operator = (const TNodoAVL &nodo){
 	}
 }
 
-
 /*.................................TAVLPORO...........................................*/
-
 //Constructor por defecto
 TAVLPoro::TAVLPoro(){
 	this->raiz = NULL;
@@ -157,9 +155,7 @@ bool TAVLPoro::InsertarAux(const TPoro &poro, bool &crece){
 			}
 		}
 	}
-
 	return crece;
-	
 }
 
 void TAVLPoro::EquilibrarIzquierda(){
@@ -203,7 +199,6 @@ void TAVLPoro::EquilibrarIzquierda(){
 		this->raiz = auxK->raiz;
 	}
 }
-
 
 void TAVLPoro::EquilibrarDerecha(){
 	TAVLPoro *auxJ, *auxK;
@@ -271,9 +266,7 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 	bool deCreceIz = false;
 	bool borrar = true;
 
-
 	if(this->Raiz() == poro){
-
 		if(this->Nodos() == 1 && this->NodosHoja() == 1){ //En un nodo hoja. 
 			this->~TAVLPoro();
 			deCrece = true;
@@ -290,7 +283,6 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 				if(!(*this).raiz->iz.EsVacio()){
 					*auxAbb = (*this).raiz->iz; //Decrece por la iz.
 					deCreceIz = true;
-
 				}
 				
 				if(!(*this).raiz->de.EsVacio()){
@@ -324,9 +316,7 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 				}
 			}
 		}
-
 	}
-
 	
 	if(!deCrece){
 		if(!(*this).raiz->de.EsVacio()&&(*this).raiz->de.Buscar(poro)){
@@ -360,11 +350,8 @@ bool TAVLPoro::BorrarAux(const TPoro &poro, bool &deCrece){
 	
 		}
 	}
-
 	return borrar;
 }
-
-
 
 void TAVLPoro::EquilibrarIzquierdaBorrar(bool &decrece){
 	TAVLPoro *auxJ, *auxK;
@@ -419,7 +406,6 @@ void TAVLPoro::EquilibrarIzquierdaBorrar(bool &decrece){
 	}
 }
 
-
 void TAVLPoro::EquilibrarDerechaBorrar(bool &decrece){
 	TAVLPoro *auxJ, *auxK;
 	int i = 0;
@@ -446,7 +432,6 @@ void TAVLPoro::EquilibrarDerechaBorrar(bool &decrece){
 		auxJ = new TAVLPoro(this->raiz->de);
 		auxK = new TAVLPoro(auxJ->raiz->iz);
 		i = auxK->raiz->fe;
-
 		this->raiz->de = auxK->raiz->iz;
 		auxJ->raiz->iz = auxK->raiz->de;
 		auxK->raiz->de = *auxJ;
@@ -472,7 +457,6 @@ void TAVLPoro::EquilibrarDerechaBorrar(bool &decrece){
 		this->raiz = auxK->raiz;
 	}
 }
-
 
 //Devuelve la altura del árbol. La altura de un árbol vacío es 0.
 int TAVLPoro::Altura()const{
@@ -535,8 +519,6 @@ void TAVLPoro::InordenAux(TVectorPoro &v, int &pos)const{
 	}
 }
 
-
-
 //Devuelve el recorrido en Preorden
 TVectorPoro TAVLPoro::Preorden()const{
 	int pos = 1;
@@ -545,6 +527,7 @@ TVectorPoro TAVLPoro::Preorden()const{
 	return v;
 }
 
+//PreordenAux
 void TAVLPoro::PreordenAux(TVectorPoro &v, int &pos)const{
 	if(!(*this).EsVacio()){
 		v[pos++] = (*this).Raiz();
@@ -561,7 +544,7 @@ TVectorPoro TAVLPoro::Postorden()const{
 	return v;
 }
 
-
+//PostordenAux
 void TAVLPoro::PostordenAux(TVectorPoro &v, int &pos)const{
 	if(!(*this).EsVacio()){
 		(*this).raiz->iz.PostordenAux(v, pos);
@@ -571,28 +554,46 @@ void TAVLPoro::PostordenAux(TVectorPoro &v, int &pos)const{
 }
 
 ostream & operator << (ostream &os,const TAVLPoro &avl){
-//	avl.Imprimir(os);
-
 	os << avl.Inorden();
 	return os;
 }
 
-void TAVLPoro::Imprimir(ostream &os)const{
-	/* RECORRIDO POR NIVELES
-	int i = 1;
-	queue<TAVLPoro> cola;
-	TAVLPoro *auxAvl = new TAVLPoro((*this));
-	cola.push(*auxAvl);
-	os << "[";
-	while(!cola.empty()){
-		*auxAvl = cola.front();
-		if((*this).Raiz() != auxAvl->Raiz()) os << " ";
-		os << i << " " << auxAvl->Raiz();
-		i++;
-		cola.pop();
-		if(!(auxAvl->raiz->iz.EsVacio())) cola.push(auxAvl->raiz->iz);
-		if(!(auxAvl->raiz->de.EsVacio())) cola.push(auxAvl->raiz->de);
-	}
-	os << "]";*/
+TVectorPoro TAVLPoro::BuscaAVL(TListaPoro &lista)const{
+	TVectorPoro v(lista.Longitud());
+
+	
+
+	return v;
 }
+
+
+/*
+0: Si el elemento que ocupa la posición 'i' en la lista 
+no se encuentra en el árbol.
+1: Si el elemento que ocupa la posición 'i' en la lista 
+se encuentra en un nodo que es hijo izquierdo de su nodo padre.
+2: Si el elemento que ocupa la posición 'i' en la lista 
+se encuentra en un nodo que es hijo derecho de su nodo padre. 
+3: Si el elemento que ocupa la posición 'i' en la lista 
+se encuentra en uno que es raíz del árbol. 
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
